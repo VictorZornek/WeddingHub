@@ -77,6 +77,11 @@ export function deletePayment(paymentId: string) {
   return supabase.from('payments').delete().eq('id', paymentId);
 }
 
+// paidAt = "AAAA-MM-DD" marks the installment as paid; null marks it as pending again.
+export function setInstallmentPaid(installmentId: string, paidAt: string | null) {
+  return supabase.from('installments').update({ paid_at: paidAt }).eq('id', installmentId);
+}
+
 export type ItemOption = { id: string; name: string; category: string };
 
 // Budget items to link a payment to, with their category for context.

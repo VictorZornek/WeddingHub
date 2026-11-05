@@ -1,6 +1,7 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { SymbolView } from 'expo-symbols';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/card';
 import { FormMessage, LinkButton } from '@/components/form';
@@ -9,6 +10,7 @@ import { Spacing } from '@/constants/theme';
 import {
   deletePayment,
   fetchPayment,
+  setInstallmentPaid,
   summarizePayment,
   type PaymentWithDetails,
 } from '@/features/payments/payments';
@@ -49,6 +51,25 @@ export default function PaymentScreen() {
     router.back();
   }
 
+  // Updates the screen right away and reverts if the save fails.
+  async function handleTogglePaid(installmentId: string, paid: boolean) {
+    if (!payment) return;
+    const before = payment;
+    const paidAt = paid ? todayIso() : null;
+    setError(null);
+    setPayment({
+      ...payment,
+      installments: payment.installments.map((i) =>
+        i.id === installmentId ? { ...i, paid_at: paidAt } : i
+      ),
+    });
+    const { error: saveError } = await setInstallmentPaid(installmentId, paidAt);
+    if (saveError) {
+      setPayment(before);
+      setError('Não foi possível atualizar a parcela. Tente de novo.');
+    }
+  }
+
   const summary = payment ? summarizePayment(payment) : null;
   const today = todayIso();
 
@@ -75,6 +96,10 @@ export default function PaymentScreen() {
               </ThemedText>
             )}
 
+            <ThemedText type="small" themeColor="textSecondary">
+              Toque no círculo para marcar a parcela como paga.
+            </ThemedText>
+
             <Card style={styles.list}>
               {payment.installments.map((installment, index) => {
                 const isPaid = !!installment.paid_at;
@@ -89,7 +114,21 @@ export default function PaymentScreen() {
                         borderBottomColor: theme.border,
                       },
                     ]}>
-                    <View>
+                    <Pressable
+                      accessibilityRole="checkbox"
+                      accessibilityState={{ checked: isPaid }}
+                      accessibilityLabel={`Marcar ${installment.number}ª parcela como paga`}
+                      hitSlop={8}
+                      onPress={() => handleTogglePaid(installment.id, !isPaid)}
+                      style={[
+                        styles.check,
+                        isPaid
+                          ? { backgroundColor: theme.accent, borderColor: theme.accent }
+                          : { borderColor: isOverdue ? theme.danger : theme.border },
+                      ]}>
+                      {isPaid && <SymbolView name="checkmark" size={14} tintColor={theme.onAccent} />}
+                    </Pressable>
+                    <View style={styles.rowText}>
                       <ThemedText type="small">
                         {installment.number}ª parcela · {formatDate(installment.due_date)}
                       </ThemedText>
@@ -141,8 +180,17 @@ const styles = StyleSheet.create({
   list: { paddingVertical: 0 },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: Spacing.three,
     paddingVertical: Spacing.three,
+  },
+  rowText: { flex: 1 },
+  check: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
