@@ -68,11 +68,17 @@ export function useBudget() {
     };
   }, [weddingId]);
 
+  // Pull-to-refresh: shows the spinner.
   const refresh = useCallback(async () => {
     if (!weddingId) return;
     setIsRefreshing(true);
     setLoaded(await fetchBudget(weddingId));
     setIsRefreshing(false);
+  }, [weddingId]);
+
+  // Quiet reload, e.g. when coming back from an edit screen.
+  const reload = useCallback(async () => {
+    if (weddingId) setLoaded(await fetchBudget(weddingId));
   }, [weddingId]);
 
   const current = loaded && loaded.weddingId === weddingId ? loaded : null;
@@ -83,5 +89,6 @@ export function useBudget() {
     isLoading: !!weddingId && !current,
     isRefreshing,
     refresh,
+    reload,
   };
 }

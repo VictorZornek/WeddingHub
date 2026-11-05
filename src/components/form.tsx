@@ -50,10 +50,10 @@ export function PrimaryButton({ label, onPress, isLoading }: ButtonProps) {
   );
 }
 
-export function LinkButton({ label, onPress }: ButtonProps) {
+export function LinkButton({ label, onPress, destructive }: ButtonProps & { destructive?: boolean }) {
   return (
     <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
-      <ThemedText type="small" themeColor="link" style={styles.center}>
+      <ThemedText type="small" themeColor={destructive ? 'danger' : 'link'} style={styles.center}>
         {label}
       </ThemedText>
     </Pressable>

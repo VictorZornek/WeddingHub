@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -16,8 +17,15 @@ import { formatCurrency, formatPercent } from '@/lib/format';
 
 export default function BudgetScreen() {
   const theme = useTheme();
-  const { projects, error, isLoading, isRefreshing, refresh } = useBudget();
+  const { projects, error, isLoading, isRefreshing, refresh, reload } = useBudget();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // Totals change after editing items, so reload when coming back to this tab.
+  useFocusEffect(
+    useCallback(() => {
+      reload();
+    }, [reload])
+  );
 
   const project = projects.find((p) => p.id === selectedId) ?? projects[0] ?? null;
   const totals = addTotals(project?.categories.map((c) => sumItems(c.budget_items)) ?? []);
@@ -74,7 +82,13 @@ export default function BudgetScreen() {
               </Card>
 
               {project.categories.map((category) => (
-                <CategoryCard key={category.id} category={category} />
+                <CategoryCard
+                  key={category.id}
+                  category={category}
+                  onPress={() =>
+                    router.push({ pathname: '/category/[id]', params: { id: category.id } })
+                  }
+                />
               ))}
             </>
           )}

@@ -1,5 +1,5 @@
 import { SymbolView } from 'expo-symbols';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { CapBar } from '@/components/budget/cap-bar';
 import { Card } from '@/components/card';
@@ -11,7 +11,9 @@ import type { CategoryWithItems } from '@/features/budget/use-budget';
 import { useTheme } from '@/hooks/use-theme';
 import { formatCurrency, formatPercent } from '@/lib/format';
 
-export function CategoryCard({ category }: { category: CategoryWithItems }) {
+type Props = { category: CategoryWithItems; onPress: () => void };
+
+export function CategoryCard({ category, onPress }: Props) {
   const theme = useTheme();
   const totals = sumItems(category.budget_items);
   const usage = capUsage(totals.projected, category.spending_cap);
@@ -19,6 +21,7 @@ export function CategoryCard({ category }: { category: CategoryWithItems }) {
   const itemCount = category.budget_items.length;
 
   return (
+    <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
     <Card style={styles.card}>
       <View style={styles.header}>
         <View style={[styles.icon, { backgroundColor: theme.accentSoft }]}>
@@ -52,6 +55,7 @@ export function CategoryCard({ category }: { category: CategoryWithItems }) {
         </View>
       )}
     </Card>
+    </Pressable>
   );
 }
 
@@ -69,4 +73,5 @@ const styles = StyleSheet.create({
   values: { alignItems: 'flex-end' },
   row: { flexDirection: 'row', justifyContent: 'space-between', gap: Spacing.two },
   capBlock: { gap: Spacing.one },
+  pressed: { opacity: 0.7 },
 });
