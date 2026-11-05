@@ -32,6 +32,23 @@ export type Category = {
   position: number;
 };
 
+export type Installment = {
+  id: string;
+  payment_id: string;
+  number: number;
+  amount: number;
+  due_date: string;
+  paid_at: string | null;
+};
+
+export type Payment = {
+  id: string;
+  budget_item_id: string | null;
+  description: string;
+  total_amount: number;
+  created_at: string;
+};
+
 export type Project = {
   id: string;
   name: string;

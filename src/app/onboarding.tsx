@@ -6,31 +6,11 @@ import { FormMessage, LinkButton, PrimaryButton, TextField } from '@/components/
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
+import { maskDate, parseBrazilianDate } from '@/lib/date';
 import { supabase } from '@/lib/supabase';
 import { useWedding } from '@/providers/wedding-provider';
 
 type Mode = 'create' | 'join';
-
-// Turns "DD/MM/AAAA" into "AAAA-MM-DD". Returns null when invalid.
-function parseBrazilianDate(value: string): string | null {
-  const match = value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!match) return null;
-  const [, day, month, year] = match;
-  const date = new Date(Number(year), Number(month) - 1, Number(day));
-  const isRealDate =
-    date.getFullYear() === Number(year) &&
-    date.getMonth() === Number(month) - 1 &&
-    date.getDate() === Number(day);
-  return isRealDate ? `${year}-${month}-${day}` : null;
-}
-
-// Adds the slashes while typing: 15032027 -> 15/03/2027.
-function maskDate(value: string) {
-  const digits = value.replace(/\D/g, '').slice(0, 8);
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
-  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
-}
 
 export default function OnboardingScreen() {
   const { refresh } = useWedding();
