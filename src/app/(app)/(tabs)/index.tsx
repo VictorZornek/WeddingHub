@@ -5,6 +5,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ProjectSwitcher } from '@/components/budget/project-switcher';
+import { ProjectionChart } from '@/components/dashboard/projection-chart';
 import { SpendingChart } from '@/components/dashboard/spending-chart';
 import { SummaryCards } from '@/components/dashboard/summary-cards';
 import { ThemedText } from '@/components/themed-text';
@@ -13,25 +14,28 @@ import { BottomTabInset, Spacing } from '@/constants/theme';
 import { addTotals, sumItems } from '@/features/budget/totals';
 import { useBudget, type ProjectWithCategories } from '@/features/budget/use-budget';
 import {
+  paymentsForProject,
+  projectionByCategory,
+  projectionSeries,
+} from '@/features/dashboard/projection';
+import {
   fetchPayments,
   summarizePayment,
   type PaymentWithDetails,
 } from '@/features/payments/payments';
 import { useTheme } from '@/hooks/use-theme';
+import { todayIso } from '@/lib/date';
 import { formatDate } from '@/lib/format';
 import { useWedding } from '@/providers/wedding-provider';
 
-// Paid installments of payments linked to this project's items. Payments without
-// a linked item count for the main project (the first one, "Casamento").
-function paidForProject(
+// Payments that belong to the selected project (see paymentsForProject).
+function projectPayments(
   payments: PaymentWithDetails[],
   project: ProjectWithCategories,
   isMainProject: boolean
 ) {
   const itemIds = new Set(project.categories.flatMap((c) => c.budget_items.map((i) => i.id)));
-  return payments
-    .filter((p) => (p.budget_item_id ? itemIds.has(p.budget_item_id) : isMainProject))
-    .reduce((sum, p) => sum + summarizePayment(p).paid, 0);
+  return paymentsForProject(payments, itemIds, isMainProject);
 }
 
 function daysUntil(isoDate: string) {
@@ -59,7 +63,17 @@ export default function HomeScreen() {
 
   const project = projects.find((p) => p.id === selectedId) ?? projects[0] ?? null;
   const totals = addTotals(project?.categories.map((c) => sumItems(c.budget_items)) ?? []);
-  const paid = project ? paidForProject(payments, project, project.id === projects[0]?.id) : 0;
+  const ownPayments = project ? projectPayments(payments, project, project.id === projects[0]?.id) : [];
+  const paid = ownPayments.reduce((sum, p) => sum + summarizePayment(p).paid, 0);
+  const currentMonth = todayIso().slice(0, 7);
+  const weddingMonth = wedding?.wedding_date?.slice(0, 7) ?? null;
+  const projection = projectionSeries(ownPayments, currentMonth, weddingMonth);
+  const projectionByCat = projectionByCategory(
+    ownPayments,
+    project?.categories ?? [],
+    currentMonth,
+    weddingMonth
+  );
   const daysLeft = wedding?.wedding_date ? daysUntil(wedding.wedding_date) : null;
 
   return (
@@ -100,6 +114,14 @@ export default function HomeScreen() {
               )}
               <SummaryCards totals={totals} paid={paid} cap={project.spending_cap} />
               <SpendingChart categories={project.categories} />
+              <ProjectionChart
+                points={projection}
+                byCategory={projectionByCat}
+                categoryIds={project.categories.map((c) => c.id)}
+                projected={totals.projected}
+                cap={project.spending_cap}
+                currentMonth={currentMonth}
+              />
             </>
           )}
         </ScrollView>
