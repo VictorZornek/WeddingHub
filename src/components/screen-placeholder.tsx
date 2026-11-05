@@ -1,3 +1,4 @@
+import type { PropsWithChildren } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -5,13 +6,13 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 
-type Props = {
+type Props = PropsWithChildren<{
   title: string;
   description: string;
-};
+}>;
 
 // Temporary screen until the tab is built.
-export function ScreenPlaceholder({ title, description }: Props) {
+export function ScreenPlaceholder({ title, description, children }: Props) {
   return (
     <ThemedView style={styles.flex}>
       <SafeAreaView style={styles.container}>
@@ -19,6 +20,7 @@ export function ScreenPlaceholder({ title, description }: Props) {
         <ThemedText themeColor="textSecondary" style={styles.center}>
           {description}
         </ThemedText>
+        {children}
       </SafeAreaView>
     </ThemedView>
   );
