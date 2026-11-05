@@ -5,7 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Card } from '@/components/card';
 import { PrimaryButton } from '@/components/form';
+import { CashFlowList } from '@/components/payments/cash-flow-list';
 import { PaymentCard } from '@/components/payments/payment-card';
+import { Segmented } from '@/components/segmented';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, Spacing } from '@/constants/theme';
@@ -14,15 +16,24 @@ import {
   summarizePayment,
   type PaymentWithDetails,
 } from '@/features/payments/payments';
+import { monthlyCashFlow } from '@/features/payments/schedule';
 import { useTheme } from '@/hooks/use-theme';
 import { formatCurrency } from '@/lib/format';
 import { useWedding } from '@/providers/wedding-provider';
+
+type PaymentsView = 'contracts' | 'monthly';
+
+const VIEW_OPTIONS: { value: PaymentsView; label: string }[] = [
+  { value: 'contracts', label: 'Contratos' },
+  { value: 'monthly', label: 'Por mês' },
+];
 
 export default function PaymentsScreen() {
   const theme = useTheme();
   const { wedding } = useWedding();
   const weddingId = wedding?.id;
   const [payments, setPayments] = useState<PaymentWithDetails[] | null>(null);
+  const [view, setView] = useState<PaymentsView>('contracts');
   const [hasError, setHasError] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -79,7 +90,11 @@ export default function PaymentsScreen() {
 
               <PrimaryButton label="Novo pagamento" onPress={() => router.push('/payment/new')} />
 
-              {payments.length === 0 ? (
+              <Segmented options={VIEW_OPTIONS} value={view} onChange={setView} />
+
+              {view === 'monthly' ? (
+                <CashFlowList months={monthlyCashFlow(payments)} />
+              ) : payments.length === 0 ? (
                 <ThemedText themeColor="textSecondary" style={styles.empty}>
                   Registre um contrato para acompanhar as parcelas e os vencimentos.
                 </ThemedText>
