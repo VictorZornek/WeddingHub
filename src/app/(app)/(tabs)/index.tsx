@@ -5,6 +5,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ProjectSwitcher } from '@/components/budget/project-switcher';
+import { InsightsCards } from '@/components/dashboard/insights-cards';
 import { ProjectionChart } from '@/components/dashboard/projection-chart';
 import { SpendingChart } from '@/components/dashboard/spending-chart';
 import { SummaryCards } from '@/components/dashboard/summary-cards';
@@ -122,6 +123,7 @@ export default function HomeScreen() {
                 cap={project.spending_cap}
                 currentMonth={currentMonth}
               />
+              <InsightsCards categories={project.categories} />
             </>
           )}
         </ScrollView>
