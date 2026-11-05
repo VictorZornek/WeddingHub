@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, Share, StyleSheet, View } from 'react-native';
 
@@ -65,6 +65,13 @@ export default function SettingsScreen() {
             </View>
           </Section>
         )}
+
+        <Section title="Histórico">
+          <ThemedText type="small" themeColor="textSecondary">
+            Veja quem criou, alterou ou apagou itens, pagamentos, parcelas, lembretes e limites.
+          </ThemedText>
+          <LinkButton label="Ver histórico de atividades" onPress={() => router.push('/activity')} />
+        </Section>
 
         <Section title="Conta">
           <ThemedText type="small">{session?.user.email}</ThemedText>
