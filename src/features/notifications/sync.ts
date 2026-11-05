@@ -1,5 +1,7 @@
+import { fetchPayments } from '@/features/payments/payments';
 import { fetchReminders } from '@/features/reminders/reminders';
 
+import { installmentNotices } from './installment-notices';
 import { ensureNotificationPermission, replaceScheduledNotifications, type Notice } from './notifications';
 
 async function reminderNotices(weddingId: string): Promise<Notice[]> {
@@ -9,11 +11,18 @@ async function reminderNotices(weddingId: string): Promise<Notice[]> {
     .map((r) => ({ title: r.title, body: r.notes ?? 'Lembrete do casamento', date: new Date(r.remind_at) }));
 }
 
+async function paymentNotices(weddingId: string): Promise<Notice[]> {
+  return installmentNotices((await fetchPayments(weddingId)) ?? []);
+}
+
 async function runSync(weddingId: string) {
   const allowed = await ensureNotificationPermission();
   if (!allowed) return;
-  const notices = await reminderNotices(weddingId);
-  await replaceScheduledNotifications(notices);
+  const [reminders, payments] = await Promise.all([
+    reminderNotices(weddingId),
+    paymentNotices(weddingId),
+  ]);
+  await replaceScheduledNotifications([...reminders, ...payments]);
 }
 
 // Calls run one after another so two syncs never schedule duplicates.

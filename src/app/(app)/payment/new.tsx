@@ -14,6 +14,7 @@ import {
   planInstallments,
   type ItemOption,
 } from '@/features/payments/payments';
+import { syncNotifications } from '@/features/notifications/sync';
 import { useTheme } from '@/hooks/use-theme';
 import { maskDate, parseBrazilianDate } from '@/lib/date';
 import { formatCurrency, formatDate, parseMoneyInput } from '@/lib/format';
@@ -85,6 +86,7 @@ export default function NewPaymentScreen() {
     setIsSaving(false);
 
     if (!ok) return setError('Não foi possível salvar. Tente de novo.');
+    syncNotifications(wedding!.id);
     router.back();
   }
 

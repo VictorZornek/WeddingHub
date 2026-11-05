@@ -14,13 +14,16 @@ import {
   summarizePayment,
   type PaymentWithDetails,
 } from '@/features/payments/payments';
+import { syncNotifications } from '@/features/notifications/sync';
 import { useTheme } from '@/hooks/use-theme';
 import { confirmDestructive } from '@/lib/confirm';
 import { todayIso } from '@/lib/date';
 import { formatCurrency, formatDate } from '@/lib/format';
+import { useWedding } from '@/providers/wedding-provider';
 
 export default function PaymentScreen() {
   const theme = useTheme();
+  const { wedding } = useWedding();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [payment, setPayment] = useState<PaymentWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,6 +51,7 @@ export default function PaymentScreen() {
     if (!confirmed) return;
     const { error: deleteError } = await deletePayment(payment.id);
     if (deleteError) return setError('Não foi possível apagar. Tente de novo.');
+    if (wedding) syncNotifications(wedding.id);
     router.back();
   }
 
@@ -67,7 +71,10 @@ export default function PaymentScreen() {
     if (saveError) {
       setPayment(before);
       setError('Não foi possível atualizar a parcela. Tente de novo.');
+      return;
     }
+    // Paid installments should stop sending due-date alerts.
+    if (wedding) syncNotifications(wedding.id);
   }
 
   const summary = payment ? summarizePayment(payment) : null;
