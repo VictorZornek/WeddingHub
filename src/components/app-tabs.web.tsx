@@ -31,6 +31,9 @@ export default function AppTabs() {
           <TabTrigger name="payments" href="/payments" asChild>
             <TabButton>Pagamentos</TabButton>
           </TabTrigger>
+          <TabTrigger name="guests" href="/guests" asChild>
+            <TabButton>Convidados</TabButton>
+          </TabTrigger>
           <TabTrigger name="reminders" href="/reminders" asChild>
             <TabButton>Lembretes</TabButton>
           </TabTrigger>

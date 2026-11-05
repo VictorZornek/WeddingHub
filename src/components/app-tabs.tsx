@@ -28,6 +28,11 @@ export default function AppTabs() {
         <NativeTabs.Trigger.Icon sf="creditcard.fill" md="credit_card" />
       </NativeTabs.Trigger>
 
+      <NativeTabs.Trigger name="guests">
+        <NativeTabs.Trigger.Label>Convidados</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="person.3.fill" md="groups" />
+      </NativeTabs.Trigger>
+
       <NativeTabs.Trigger name="reminders">
         <NativeTabs.Trigger.Label>Lembretes</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="bell.fill" md="notifications" />
