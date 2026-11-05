@@ -1,6 +1,13 @@
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CapBar } from '@/components/budget/cap-bar';
@@ -71,7 +78,9 @@ export default function BudgetScreen() {
                   <View style={styles.capBlock}>
                     <CapBar usage={usage} onAccent />
                     <ThemedText type="small" themeColor="onAccentSecondary">
-                      {formatPercent(usage)} do teto de {formatCurrency(project.spending_cap)}
+                      {usage > 1
+                        ? `Acima do teto de ${formatCurrency(project.spending_cap)}`
+                        : `${formatPercent(usage)} do teto de ${formatCurrency(project.spending_cap)}`}
                     </ThemedText>
                   </View>
                 ) : (
@@ -79,6 +88,20 @@ export default function BudgetScreen() {
                     Sem teto de gastos definido
                   </ThemedText>
                 )}
+
+                <Pressable
+                  onPress={() =>
+                    router.push({ pathname: '/caps/[projectId]', params: { projectId: project.id } })
+                  }
+                  style={({ pressed }) => [
+                    styles.capButton,
+                    { backgroundColor: theme.onAccentSecondary },
+                    pressed && styles.pressed,
+                  ]}>
+                  <ThemedText type="smallBold" style={styles.capButtonText}>
+                    {project.spending_cap !== null ? 'Editar tetos' : 'Definir tetos'}
+                  </ThemedText>
+                </Pressable>
               </Card>
 
               {project.categories.map((category) => (
@@ -124,4 +147,13 @@ const styles = StyleSheet.create({
   summaryRow: { flexDirection: 'row', gap: Spacing.five },
   summaryValue: { gap: Spacing.half },
   capBlock: { gap: Spacing.one },
+  capButton: {
+    alignSelf: 'flex-start',
+    borderRadius: 999,
+    paddingVertical: Spacing.one + 2,
+    paddingHorizontal: Spacing.three,
+  },
+  // White reads well on the dark-green pill in both light and dark mode.
+  capButtonText: { color: '#FFFFFF' },
+  pressed: { opacity: 0.7 },
 });
