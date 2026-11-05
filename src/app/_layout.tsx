@@ -5,6 +5,7 @@ import { useColorScheme } from 'react-native';
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { Colors } from '@/constants/theme';
 import { applySavedThemePreference } from '@/features/settings/theme-preference';
+import '@/lib/page-language';
 import { SessionProvider, useSession } from '@/providers/session-provider';
 import { useWedding, WeddingProvider } from '@/providers/wedding-provider';
 
