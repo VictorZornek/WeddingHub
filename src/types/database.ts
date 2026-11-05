@@ -49,6 +49,17 @@ export type Payment = {
   created_at: string;
 };
 
+export type Reminder = {
+  id: string;
+  title: string;
+  notes: string | null;
+  /** ISO timestamp. */
+  remind_at: string;
+  done: boolean;
+  created_by: string;
+  created_at: string;
+};
+
 export type Project = {
   id: string;
   name: string;

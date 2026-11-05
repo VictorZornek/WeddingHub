@@ -21,6 +21,22 @@ export function maskDate(value: string) {
   return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
 }
 
+// Adds the colon while typing: 0930 -> 09:30.
+export function maskTime(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 4);
+  return digits.length <= 2 ? digits : `${digits.slice(0, 2)}:${digits.slice(2)}`;
+}
+
+// "AAAA-MM-DD" + "HH:MM" -> local Date. Returns null when the time is invalid.
+export function combineDateTime(isoDate: string, time: string): Date | null {
+  const match = time.match(/^(\d{2}):(\d{2})$/);
+  if (!match) return null;
+  const [hours, minutes] = [Number(match[1]), Number(match[2])];
+  if (hours > 23 || minutes > 59) return null;
+  const [year, month, day] = isoDate.split('-').map(Number);
+  return new Date(year, month - 1, day, hours, minutes);
+}
+
 function pad(n: number) {
   return String(n).padStart(2, '0');
 }
@@ -40,4 +56,19 @@ export function addMonths(isoDate: string, months: number) {
   const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
   target.setDate(Math.min(day, lastDay));
   return toIsoDate(target);
+}
+
+// Date -> "15/03/2027"
+export function toBrazilianDate(date: Date) {
+  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
+}
+
+// Date -> "09:30"
+export function toTime(date: Date) {
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+// Date -> "15/03/2027 às 09:30"
+export function formatDateTime(date: Date) {
+  return `${toBrazilianDate(date)} às ${toTime(date)}`;
 }
