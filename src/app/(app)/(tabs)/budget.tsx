@@ -1,4 +1,5 @@
 import { router, useFocusEffect } from 'expo-router';
+import { SymbolView } from 'expo-symbols';
 import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
@@ -46,7 +47,22 @@ export default function BudgetScreen() {
           refreshControl={
             <RefreshControl refreshing={isRefreshing} onRefresh={refresh} tintColor={theme.link} />
           }>
-          <ThemedText type="subtitle">Orçamento</ThemedText>
+          <View style={styles.header}>
+            <ThemedText type="subtitle">Orçamento</ThemedText>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => router.push('/vendors')}
+              style={({ pressed }) => [
+                styles.vendorsButton,
+                { backgroundColor: theme.accentSoft },
+                pressed && styles.pressed,
+              ]}>
+              <SymbolView name="person.2" size={16} tintColor={theme.link} />
+              <ThemedText type="smallBold" themeColor="link">
+                Fornecedores
+              </ThemedText>
+            </Pressable>
+          </View>
 
           {isLoading && <ActivityIndicator style={styles.loading} color={theme.link} />}
           {error && <ThemedText themeColor="danger">{error}</ThemedText>}
@@ -155,5 +171,14 @@ const styles = StyleSheet.create({
   },
   // White reads well on the dark-green pill in both light and dark mode.
   capButtonText: { color: '#FFFFFF' },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  vendorsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+    borderRadius: 999,
+    paddingVertical: Spacing.one + 2,
+    paddingHorizontal: Spacing.three,
+  },
   pressed: { opacity: 0.7 },
 });

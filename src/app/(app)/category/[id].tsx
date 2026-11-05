@@ -4,7 +4,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ItemRow } from '@/components/budget/item-row';
 import { Card } from '@/components/card';
-import { PrimaryButton } from '@/components/form';
+import { LinkButton, PrimaryButton } from '@/components/form';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { fetchCategory, type CategoryDetail } from '@/features/budget/items';
@@ -73,6 +73,12 @@ export default function CategoryScreen() {
               label="Adicionar item"
               onPress={() =>
                 router.push({ pathname: '/item/[id]', params: { id: 'new', categoryId: category.id } })
+              }
+            />
+            <LinkButton
+              label="Comparar cotações desta categoria"
+              onPress={() =>
+                router.push({ pathname: '/compare/[categoryId]', params: { categoryId: category.id } })
               }
             />
           </>
