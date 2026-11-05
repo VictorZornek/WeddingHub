@@ -13,19 +13,23 @@ export default function AppTabs() {
       indicatorColor={colors.backgroundElement}
       labelStyle={{ selected: { color: colors.text } }}>
       <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/home.png')}
-          renderingMode="template"
-        />
+        <NativeTabs.Trigger.Label>Início</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="chart.pie.fill" md="pie_chart" />
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name="explore">
-        <NativeTabs.Trigger.Label>Explore</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/explore.png')}
-          renderingMode="template"
-        />
+      <NativeTabs.Trigger name="budget">
+        <NativeTabs.Trigger.Label>Orçamento</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="list.bullet.rectangle.fill" md="list_alt" />
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="payments">
+        <NativeTabs.Trigger.Label>Pagamentos</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="creditcard.fill" md="credit_card" />
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="reminders">
+        <NativeTabs.Trigger.Label>Lembretes</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="bell.fill" md="notifications" />
       </NativeTabs.Trigger>
     </NativeTabs>
   );
