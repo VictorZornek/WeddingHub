@@ -11,8 +11,13 @@ export function TextField(props: TextInputProps) {
   return (
     <TextInput
       placeholderTextColor={theme.textSecondary}
+      selectionColor={theme.link}
       {...props}
-      style={[styles.input, { backgroundColor: theme.backgroundElement, color: theme.text }, props.style]}
+      style={[
+        styles.input,
+        { backgroundColor: theme.backgroundElement, borderColor: theme.border, color: theme.text },
+        props.style,
+      ]}
     />
   );
 }
@@ -31,13 +36,13 @@ export function PrimaryButton({ label, onPress, isLoading }: ButtonProps) {
       disabled={isLoading}
       style={({ pressed }) => [
         styles.button,
-        { backgroundColor: theme.text },
+        { backgroundColor: theme.accent },
         (pressed || isLoading) && styles.pressed,
       ]}>
       {isLoading ? (
-        <ActivityIndicator color={theme.background} />
+        <ActivityIndicator color={theme.onAccent} />
       ) : (
-        <ThemedText type="smallBold" style={{ color: theme.background }}>
+        <ThemedText type="smallBold" themeColor="onAccent">
           {label}
         </ThemedText>
       )}
@@ -48,7 +53,7 @@ export function PrimaryButton({ label, onPress, isLoading }: ButtonProps) {
 export function LinkButton({ label, onPress }: ButtonProps) {
   return (
     <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
-      <ThemedText type="small" themeColor="textSecondary" style={styles.center}>
+      <ThemedText type="small" themeColor="link" style={styles.center}>
         {label}
       </ThemedText>
     </Pressable>
@@ -56,7 +61,13 @@ export function LinkButton({ label, onPress }: ButtonProps) {
 }
 
 export function FormMessage({ error, info }: { error?: string | null; info?: string | null }) {
-  if (error) return <ThemedText style={[styles.center, styles.error]}>{error}</ThemedText>;
+  if (error) {
+    return (
+      <ThemedText themeColor="danger" style={styles.center}>
+        {error}
+      </ThemedText>
+    );
+  }
   if (info) return <ThemedText style={styles.center}>{info}</ThemedText>;
   return null;
 }
@@ -64,6 +75,7 @@ export function FormMessage({ error, info }: { error?: string | null; info?: str
 const styles = StyleSheet.create({
   input: {
     borderRadius: Spacing.three,
+    borderWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.three,
     fontSize: 16,
@@ -75,5 +87,4 @@ const styles = StyleSheet.create({
   },
   pressed: { opacity: 0.7 },
   center: { textAlign: 'center' },
-  error: { color: '#d93f0b' },
 });

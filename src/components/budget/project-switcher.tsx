@@ -1,8 +1,8 @@
-import { Pressable, ScrollView, StyleSheet } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 
 type Props = {
   projects: { id: string; name: string }[];
@@ -12,19 +12,24 @@ type Props = {
 
 // Horizontal chips to switch between Casamento / Apartamento / Viagem.
 export function ProjectSwitcher({ projects, selectedId, onSelect }: Props) {
+  const theme = useTheme();
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
       {projects.map((project) => {
         const isSelected = project.id === selectedId;
         return (
           <Pressable key={project.id} onPress={() => onSelect(project.id)}>
-            <ThemedView
-              type={isSelected ? 'backgroundSelected' : 'backgroundElement'}
-              style={styles.chip}>
-              <ThemedText type={isSelected ? 'smallBold' : 'small'} themeColor={isSelected ? 'text' : 'textSecondary'}>
+            <View
+              style={[
+                styles.chip,
+                { backgroundColor: isSelected ? theme.accent : theme.accentSoft },
+              ]}>
+              <ThemedText
+                type={isSelected ? 'smallBold' : 'small'}
+                themeColor={isSelected ? 'onAccent' : 'textSecondary'}>
                 {project.name}
               </ThemedText>
-            </ThemedView>
+            </View>
           </Pressable>
         );
       })}
@@ -37,6 +42,6 @@ const styles = StyleSheet.create({
   chip: {
     paddingVertical: Spacing.two,
     paddingHorizontal: Spacing.three,
-    borderRadius: Spacing.four,
+    borderRadius: 999,
   },
 });

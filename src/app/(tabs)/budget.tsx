@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CapBar } from '@/components/budget/cap-bar';
 import { CategoryCard } from '@/components/budget/category-card';
 import { ProjectSwitcher } from '@/components/budget/project-switcher';
+import { Card } from '@/components/card';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, Spacing } from '@/constants/theme';
@@ -27,11 +28,13 @@ export default function BudgetScreen() {
       <SafeAreaView edges={['top']} style={styles.flex}>
         <ScrollView
           contentContainerStyle={styles.content}
-          refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={refresh} />}>
+          refreshControl={
+            <RefreshControl refreshing={isRefreshing} onRefresh={refresh} tintColor={theme.link} />
+          }>
           <ThemedText type="subtitle">Orçamento</ThemedText>
 
-          {isLoading && <ActivityIndicator style={styles.loading} />}
-          {error && <ThemedText style={{ color: theme.danger }}>{error}</ThemedText>}
+          {isLoading && <ActivityIndicator style={styles.loading} color={theme.link} />}
+          {error && <ThemedText themeColor="danger">{error}</ThemedText>}
 
           {!isLoading && !error && projects.length === 0 && (
             <ThemedText themeColor="textSecondary">Nenhuma categoria cadastrada ainda.</ThemedText>
@@ -41,25 +44,34 @@ export default function BudgetScreen() {
             <>
               <ProjectSwitcher projects={projects} selectedId={project.id} onSelect={setSelectedId} />
 
-              <ThemedView type="backgroundElement" style={styles.summary}>
+              <Card variant="accent" style={styles.summary}>
+                <View>
+                  <ThemedText type="small" themeColor="onAccentSecondary">
+                    Previsto
+                  </ThemedText>
+                  <ThemedText type="subtitle" themeColor="onAccent">
+                    {formatCurrency(totals.projected)}
+                  </ThemedText>
+                </View>
+
                 <View style={styles.summaryRow}>
                   <SummaryValue label="Estimado" value={totals.estimated} />
                   <SummaryValue label="Real" value={totals.actual} />
-                  <SummaryValue label="Previsto" value={totals.projected} />
                 </View>
+
                 {usage !== null && project.spending_cap !== null ? (
                   <View style={styles.capBlock}>
-                    <CapBar usage={usage} />
-                    <ThemedText type="small" themeColor="textSecondary">
+                    <CapBar usage={usage} onAccent />
+                    <ThemedText type="small" themeColor="onAccentSecondary">
                       {formatPercent(usage)} do teto de {formatCurrency(project.spending_cap)}
                     </ThemedText>
                   </View>
                 ) : (
-                  <ThemedText type="small" themeColor="textSecondary">
-                    Sem teto de gastos definido.
+                  <ThemedText type="small" themeColor="onAccentSecondary">
+                    Sem teto de gastos definido
                   </ThemedText>
                 )}
-              </ThemedView>
+              </Card>
 
               {project.categories.map((category) => (
                 <CategoryCard key={category.id} category={category} />
@@ -75,10 +87,12 @@ export default function BudgetScreen() {
 function SummaryValue({ label, value }: { label: string; value: number }) {
   return (
     <View style={styles.summaryValue}>
-      <ThemedText type="small" themeColor="textSecondary">
+      <ThemedText type="small" themeColor="onAccentSecondary">
         {label}
       </ThemedText>
-      <ThemedText type="smallBold">{formatCurrency(value)}</ThemedText>
+      <ThemedText type="smallBold" themeColor="onAccent">
+        {formatCurrency(value)}
+      </ThemedText>
     </View>
   );
 }
@@ -92,8 +106,8 @@ const styles = StyleSheet.create({
     paddingBottom: BottomTabInset + Spacing.four,
   },
   loading: { marginTop: Spacing.five },
-  summary: { borderRadius: Spacing.three, padding: Spacing.three, gap: Spacing.three },
-  summaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  summary: { gap: Spacing.three },
+  summaryRow: { flexDirection: 'row', gap: Spacing.five },
   summaryValue: { gap: Spacing.half },
   capBlock: { gap: Spacing.one },
 });

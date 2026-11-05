@@ -5,10 +5,14 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import Animated, { Easing, Keyframe } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
+import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
+
 const INITIAL_SCALE_FACTOR = Dimensions.get('screen').height / 90;
 const DURATION = 600;
 
 export function AnimatedSplashOverlay() {
+  const theme = useTheme();
   const [animate, setAnimate] = useState(false);
   const [visible, setVisible] = useState(true);
 
@@ -33,7 +37,12 @@ export function AnimatedSplashOverlay() {
     },
   });
 
-  const image = <Image style={styles.image} source={require('@/assets/images/expo-logo.png')} />;
+  const image = (
+    <ThemedText type="subtitle" style={styles.brand}>
+      Wedding Hub
+    </ThemedText>
+  );
+  const background = { backgroundColor: theme.background };
 
   return animate ? (
     <Animated.View
@@ -43,7 +52,7 @@ export function AnimatedSplashOverlay() {
           scheduleOnRN(setVisible, false);
         }
       })}
-      style={styles.splashOverlay}>
+      style={[styles.splashOverlay, background]}>
       {image}
     </Animated.View>
   ) : (
@@ -53,7 +62,7 @@ export function AnimatedSplashOverlay() {
           setAnimate(true);
         });
       }}
-      style={styles.splashOverlay}>
+      style={[styles.splashOverlay, background]}>
       {image}
     </View>
   );
@@ -138,9 +147,9 @@ const styles = StyleSheet.create({
     height: 128,
     position: 'absolute',
   },
+  brand: { textAlign: 'center' },
   splashOverlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: '#208AEF',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,

@@ -7,26 +7,37 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+// "Verde-água suave" palette.
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-    accent: '#7A6A96',
+    text: '#1D3A36',
+    textSecondary: '#5D857F',
+    background: '#F4FAF9',
+    backgroundElement: '#FFFFFF',
+    backgroundSelected: '#E2F1EE',
+    border: '#D9ECE8',
+    accent: '#76B7AC',
+    accentSoft: '#E2F1EE',
+    onAccent: '#123430',
+    onAccentSecondary: '#2E5650',
+    link: '#2F7D70',
     danger: '#C4320A',
-    track: '#E0E1E6',
+    track: '#E2F1EE',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-    accent: '#A898C4',
-    danger: '#FF7A59',
-    track: '#2E3135',
+    text: '#E5F3F0',
+    textSecondary: '#97B4AF',
+    background: '#0E1716',
+    backgroundElement: '#152321',
+    backgroundSelected: '#1C2B29',
+    border: '#223432',
+    accent: '#A3D9CF',
+    accentSoft: '#1C2B29',
+    onAccent: '#10302B',
+    onAccentSecondary: '#2A4F49',
+    link: '#A3D9CF',
+    danger: '#FF8A6B',
+    track: '#223432',
   },
 } as const;
 

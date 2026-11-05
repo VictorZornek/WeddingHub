@@ -1,11 +1,13 @@
+import { SymbolView } from 'expo-symbols';
 import { StyleSheet, View } from 'react-native';
 
 import { CapBar } from '@/components/budget/cap-bar';
+import { Card } from '@/components/card';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
-import type { CategoryWithItems } from '@/features/budget/use-budget';
+import { categoryIcon } from '@/features/budget/category-icon';
 import { capUsage, sumItems } from '@/features/budget/totals';
+import type { CategoryWithItems } from '@/features/budget/use-budget';
 import { useTheme } from '@/hooks/use-theme';
 import { formatCurrency, formatPercent } from '@/lib/format';
 
@@ -17,28 +19,30 @@ export function CategoryCard({ category }: { category: CategoryWithItems }) {
   const itemCount = category.budget_items.length;
 
   return (
-    <ThemedView type="backgroundElement" style={styles.card}>
+    <Card style={styles.card}>
       <View style={styles.header}>
-        <ThemedText type="smallBold" style={styles.name}>
-          {category.name}
-        </ThemedText>
-        <ThemedText type="smallBold">{formatCurrency(totals.estimated)}</ThemedText>
-      </View>
-
-      <View style={styles.row}>
-        <ThemedText type="small" themeColor="textSecondary">
-          {itemCount} {itemCount === 1 ? 'item' : 'itens'}
-        </ThemedText>
-        <ThemedText type="small" themeColor="textSecondary">
-          {totals.actual > 0 ? `Real ${formatCurrency(totals.actual)}` : 'Sem valor real'}
-        </ThemedText>
+        <View style={[styles.icon, { backgroundColor: theme.accentSoft }]}>
+          <SymbolView name={categoryIcon(category.name)} size={18} tintColor={theme.link} />
+        </View>
+        <View style={styles.titleBlock}>
+          <ThemedText type="smallBold">{category.name}</ThemedText>
+          <ThemedText type="small" themeColor="textSecondary">
+            {itemCount} {itemCount === 1 ? 'item' : 'itens'}
+          </ThemedText>
+        </View>
+        <View style={styles.values}>
+          <ThemedText type="smallBold">{formatCurrency(totals.estimated)}</ThemedText>
+          <ThemedText type="small" themeColor="textSecondary">
+            {totals.actual > 0 ? `Real ${formatCurrency(totals.actual)}` : 'Sem valor real'}
+          </ThemedText>
+        </View>
       </View>
 
       {usage !== null && category.spending_cap !== null && (
         <View style={styles.capBlock}>
           <CapBar usage={usage} />
           <View style={styles.row}>
-            <ThemedText type="small" style={isOver ? { color: theme.danger } : undefined} themeColor="textSecondary">
+            <ThemedText type="small" themeColor={isOver ? 'danger' : 'textSecondary'}>
               {isOver ? 'Acima do teto' : `${formatPercent(usage)} do teto`}
             </ThemedText>
             <ThemedText type="small" themeColor="textSecondary">
@@ -47,14 +51,22 @@ export function CategoryCard({ category }: { category: CategoryWithItems }) {
           </View>
         </View>
       )}
-    </ThemedView>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: Spacing.three, padding: Spacing.three, gap: Spacing.one },
-  header: { flexDirection: 'row', justifyContent: 'space-between', gap: Spacing.two },
-  name: { flexShrink: 1 },
+  card: { gap: Spacing.two },
+  header: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three },
+  icon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  titleBlock: { flex: 1 },
+  values: { alignItems: 'flex-end' },
   row: { flexDirection: 'row', justifyContent: 'space-between', gap: Spacing.two },
-  capBlock: { gap: Spacing.one, marginTop: Spacing.two },
+  capBlock: { gap: Spacing.one },
 });

@@ -3,15 +3,33 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { Colors } from '@/constants/theme';
 import { SessionProvider, useSession } from '@/providers/session-provider';
 import { useWedding, WeddingProvider } from '@/providers/wedding-provider';
 
 SplashScreen.preventAutoHideAsync();
 
+// Navigation colors follow the app palette so screen transitions don't flash white/black.
+function navigationTheme(scheme: 'light' | 'dark') {
+  const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
+  const colors = Colors[scheme];
+  return {
+    ...base,
+    colors: {
+      ...base.colors,
+      primary: colors.link,
+      background: colors.background,
+      card: colors.backgroundElement,
+      text: colors.text,
+      border: colors.border,
+    },
+  };
+}
+
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() === 'dark' ? 'dark' : 'light';
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={navigationTheme(colorScheme)}>
       <SessionProvider>
         <WeddingProvider>
           <RootNavigator />

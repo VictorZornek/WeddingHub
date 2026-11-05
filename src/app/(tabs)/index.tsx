@@ -2,7 +2,7 @@ import { Pressable, Share, StyleSheet } from 'react-native';
 
 import { ScreenPlaceholder } from '@/components/screen-placeholder';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { Card } from '@/components/card';
 import { Spacing } from '@/constants/theme';
 import { supabase } from '@/lib/supabase';
 import { useSession } from '@/providers/session-provider';
@@ -25,7 +25,7 @@ export default function HomeScreen() {
       description="Resumo do orçamento: gasto × teto por categoria e total.">
       {wedding && (
         <Pressable onPress={shareInvite} style={({ pressed }) => pressed && styles.pressed}>
-          <ThemedView type="backgroundElement" style={styles.inviteCard}>
+          <Card variant="soft" style={styles.inviteCard}>
             <ThemedText type="small" themeColor="textSecondary">
               Código de convite
             </ThemedText>
@@ -33,7 +33,7 @@ export default function HomeScreen() {
               {wedding.invite_code}
             </ThemedText>
             <ThemedText type="linkPrimary">Compartilhar</ThemedText>
-          </ThemedView>
+          </Card>
         </Pressable>
       )}
 
@@ -52,8 +52,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   inviteCard: {
     alignItems: 'center',
-    borderRadius: Spacing.three,
-    paddingVertical: Spacing.three,
     paddingHorizontal: Spacing.five,
     marginVertical: Spacing.three,
   },

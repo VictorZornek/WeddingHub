@@ -10,8 +10,9 @@ export default function AppTabs() {
   return (
     <NativeTabs
       backgroundColor={colors.background}
-      indicatorColor={colors.backgroundElement}
-      labelStyle={{ selected: { color: colors.text } }}>
+      indicatorColor={colors.accentSoft}
+      tintColor={colors.link}
+      labelStyle={{ selected: { color: colors.link } }}>
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Label>Início</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="chart.pie.fill" md="pie_chart" />
