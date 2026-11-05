@@ -1,18 +1,11 @@
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  TextInput,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { FormMessage, LinkButton, PrimaryButton, TextField } from '@/components/form';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 type Mode = 'signIn' | 'signUp';
@@ -28,7 +21,6 @@ function toFriendlyError(message: string) {
 }
 
 export default function SignInScreen() {
-  const theme = useTheme();
   const [mode, setMode] = useState<Mode>('signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -69,11 +61,6 @@ export default function SignInScreen() {
     setInfo(null);
   }
 
-  const inputStyle = [
-    styles.input,
-    { backgroundColor: theme.backgroundElement, color: theme.text },
-  ];
-
   return (
     <ThemedView style={styles.flex}>
       <SafeAreaView style={styles.flex}>
@@ -87,10 +74,8 @@ export default function SignInScreen() {
             {isSignUp ? 'Crie sua conta' : 'Entre na sua conta'}
           </ThemedText>
 
-          <TextInput
-            style={inputStyle}
+          <TextField
             placeholder="Email"
-            placeholderTextColor={theme.textSecondary}
             autoCapitalize="none"
             autoComplete="email"
             keyboardType="email-address"
@@ -98,10 +83,8 @@ export default function SignInScreen() {
             value={email}
             onChangeText={setEmail}
           />
-          <TextInput
-            style={inputStyle}
+          <TextField
             placeholder="Senha"
-            placeholderTextColor={theme.textSecondary}
             secureTextEntry
             autoComplete={isSignUp ? 'new-password' : 'current-password'}
             textContentType={isSignUp ? 'newPassword' : 'password'}
@@ -110,31 +93,17 @@ export default function SignInScreen() {
             onSubmitEditing={handleSubmit}
           />
 
-          {error && <ThemedText style={[styles.center, styles.error]}>{error}</ThemedText>}
-          {info && <ThemedText style={styles.center}>{info}</ThemedText>}
+          <FormMessage error={error} info={info} />
 
-          <Pressable
+          <PrimaryButton
+            label={isSignUp ? 'Criar conta' : 'Entrar'}
             onPress={handleSubmit}
-            disabled={isSubmitting}
-            style={({ pressed }) => [
-              styles.button,
-              { backgroundColor: theme.text },
-              (pressed || isSubmitting) && styles.pressed,
-            ]}>
-            {isSubmitting ? (
-              <ActivityIndicator color={theme.background} />
-            ) : (
-              <ThemedText style={{ color: theme.background }} type="smallBold">
-                {isSignUp ? 'Criar conta' : 'Entrar'}
-              </ThemedText>
-            )}
-          </Pressable>
-
-          <Pressable onPress={toggleMode} style={({ pressed }) => pressed && styles.pressed}>
-            <ThemedText type="small" themeColor="textSecondary" style={styles.center}>
-              {isSignUp ? 'Já tem conta? Entrar' : 'Não tem conta? Criar conta'}
-            </ThemedText>
-          </Pressable>
+            isLoading={isSubmitting}
+          />
+          <LinkButton
+            label={isSignUp ? 'Já tem conta? Entrar' : 'Não tem conta? Criar conta'}
+            onPress={toggleMode}
+          />
         </KeyboardAvoidingView>
       </SafeAreaView>
     </ThemedView>
@@ -150,17 +119,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.four,
   },
   center: { textAlign: 'center' },
-  input: {
-    borderRadius: Spacing.three,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.three,
-    fontSize: 16,
-  },
-  button: {
-    borderRadius: Spacing.three,
-    paddingVertical: Spacing.three,
-    alignItems: 'center',
-  },
-  pressed: { opacity: 0.7 },
-  error: { color: '#d93f0b' },
 });

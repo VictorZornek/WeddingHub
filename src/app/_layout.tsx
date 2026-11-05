@@ -4,6 +4,7 @@ import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { SessionProvider, useSession } from '@/providers/session-provider';
+import { useWedding, WeddingProvider } from '@/providers/wedding-provider';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -12,26 +13,34 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <SessionProvider>
-        <RootNavigator />
+        <WeddingProvider>
+          <RootNavigator />
+        </WeddingProvider>
       </SessionProvider>
     </ThemeProvider>
   );
 }
 
 function RootNavigator() {
-  const { session, isLoading } = useSession();
+  const { session, isLoading: isSessionLoading } = useSession();
+  const { wedding, isLoading: isWeddingLoading } = useWedding();
 
-  // Keep the splash screen until we know whether the user is signed in.
-  if (isLoading) return null;
+  // Keep the splash screen until we know where the user should land.
+  if (isSessionLoading || isWeddingLoading) return null;
 
   const isSignedIn = !!session;
+  const hasWedding = !!wedding;
 
   return (
     <>
       <AnimatedSplashOverlay />
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Protected guard={isSignedIn} redirectTo="/sign-in">
+        <Stack.Protected guard={isSignedIn && hasWedding}>
           <Stack.Screen name="(tabs)" />
+        </Stack.Protected>
+
+        <Stack.Protected guard={isSignedIn && !hasWedding}>
+          <Stack.Screen name="onboarding" />
         </Stack.Protected>
 
         <Stack.Protected guard={!isSignedIn}>
