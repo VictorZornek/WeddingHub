@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { chipLook } from '@/components/chip-look';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import type { CategoryOption } from '@/features/vendors/vendors';
@@ -20,12 +21,13 @@ export function CategoryPicker({ options, value, onChange }: Props) {
     <View style={styles.wrap}>
       {options.map((option) => {
         const isSelected = option.id === value;
+        const look = chipLook(theme, isSelected);
         return (
           <Pressable
             key={option.id}
             onPress={() => onChange(isSelected ? null : option.id)}
-            style={[styles.chip, { backgroundColor: isSelected ? theme.accent : theme.accentSoft }]}>
-            <ThemedText type="small" themeColor={isSelected ? 'onAccent' : 'textSecondary'}>
+            style={[styles.chip, look.container]}>
+            <ThemedText type="small" themeColor={look.textColor}>
               {option.name}
               {showProject && option.project !== 'Casamento' && option.project ? ` · ${option.project}` : ''}
             </ThemedText>

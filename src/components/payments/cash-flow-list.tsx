@@ -31,7 +31,7 @@ export function CashFlowList({ months }: { months: MonthFlow[] }) {
         return (
           <Card
             key={flow.month}
-            style={[styles.card, isCurrent && { borderColor: theme.accent, borderWidth: 1.5 }]}>
+            style={[styles.card, isCurrent && { borderColor: theme.accent }]}>
             <View style={styles.row}>
               <ThemedText type="smallBold">
                 {formatMonth(flow.month)}

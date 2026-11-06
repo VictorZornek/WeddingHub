@@ -39,7 +39,7 @@ export function ReminderRow({ reminder, isLast, now, onToggle, onPress }: Props)
             ? { backgroundColor: theme.accent, borderColor: theme.accent }
             : { borderColor: isLate ? theme.danger : theme.border },
         ]}>
-        {reminder.done && <SymbolView name="checkmark" size={14} tintColor={theme.onAccent} />}
+        {reminder.done && <SymbolView name="checkmark" size={14} tintColor={theme.onAccentFill} />}
       </Pressable>
 
       <Pressable onPress={onPress} style={({ pressed }) => [styles.text, pressed && styles.pressed]}>

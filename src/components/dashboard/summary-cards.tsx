@@ -29,7 +29,7 @@ export function SummaryCards({ totals, paid, cap }: Props) {
         <ThemedText type="subtitle" themeColor="onAccent">
           {formatCurrency(remaining)}
         </ThemedText>
-        <CapBar usage={Math.min(paidShare, 1)} onAccent />
+        <CapBar usage={Math.min(paidShare, 1)} />
         <ThemedText type="small" themeColor="onAccentSecondary">
           {formatPercent(paidShare)} do previsto já foi pago
         </ThemedText>

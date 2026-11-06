@@ -1,5 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
+import { chipLook } from '@/components/chip-look';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -17,16 +18,15 @@ export function ProjectSwitcher({ projects, selectedId, onSelect }: Props) {
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
       {projects.map((project) => {
         const isSelected = project.id === selectedId;
+        const look = chipLook(theme, isSelected);
         return (
           <Pressable key={project.id} onPress={() => onSelect(project.id)}>
             <View
               style={[
                 styles.chip,
-                { backgroundColor: isSelected ? theme.accent : theme.accentSoft },
+                look.container,
               ]}>
-              <ThemedText
-                type={isSelected ? 'smallBold' : 'small'}
-                themeColor={isSelected ? 'onAccent' : 'textSecondary'}>
+              <ThemedText type={isSelected ? 'smallBold' : 'small'} themeColor={look.textColor}>
                 {project.name}
               </ThemedText>
             </View>

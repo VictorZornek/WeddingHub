@@ -192,17 +192,21 @@ function RsvpChip({ rsvp, onPress }: { rsvp: Rsvp; onPress: () => void }) {
   const theme = useTheme();
   const look =
     rsvp === 'confirmed'
-      ? { backgroundColor: theme.accent, color: 'onAccent' as const }
+      ? { backgroundColor: theme.accentSoft, borderColor: theme.accentBorder, color: 'link' as const }
       : rsvp === 'declined'
-        ? { backgroundColor: theme.track, color: 'danger' as const }
-        : { backgroundColor: theme.accentSoft, color: 'textSecondary' as const };
+        ? { backgroundColor: theme.backgroundElement, borderColor: theme.danger, color: 'danger' as const }
+        : { backgroundColor: theme.backgroundElement, borderColor: theme.border, color: 'textSecondary' as const };
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`Status: ${RSVP_LABELS[rsvp]}. Toque para mudar.`}
       hitSlop={6}
       onPress={onPress}
-      style={({ pressed }) => [styles.chip, { backgroundColor: look.backgroundColor }, pressed && styles.pressed]}>
+      style={({ pressed }) => [
+        styles.chip,
+        { backgroundColor: look.backgroundColor, borderColor: look.borderColor, borderWidth: 1 },
+        pressed && styles.pressed,
+      ]}>
       <ThemedText type="small" themeColor={look.color} style={styles.chipText}>
         {RSVP_LABELS[rsvp]}
       </ThemedText>

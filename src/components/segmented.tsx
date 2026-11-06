@@ -21,10 +21,11 @@ export function Segmented<T extends string>({ options, value, onChange }: Props<
           <Pressable
             key={option.value}
             onPress={() => onChange(option.value)}
-            style={[styles.option, isSelected && { backgroundColor: theme.accent }]}>
-            <ThemedText
-              type={isSelected ? 'smallBold' : 'small'}
-              themeColor={isSelected ? 'onAccent' : 'textSecondary'}>
+            style={[
+              styles.option,
+              isSelected && { backgroundColor: theme.backgroundElement, borderColor: theme.accentBorder },
+            ]}>
+            <ThemedText type={isSelected ? 'smallBold' : 'small'} themeColor={isSelected ? 'link' : 'textSecondary'}>
               {option.label}
             </ThemedText>
           </Pressable>
@@ -41,5 +42,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: Spacing.two,
     borderRadius: 999,
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
 });

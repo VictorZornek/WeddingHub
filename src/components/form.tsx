@@ -36,13 +36,13 @@ export function PrimaryButton({ label, onPress, isLoading }: ButtonProps) {
       disabled={isLoading}
       style={({ pressed }) => [
         styles.button,
-        { backgroundColor: theme.accent },
+        { backgroundColor: theme.accentSoft, borderColor: theme.accent },
         (pressed || isLoading) && styles.pressed,
       ]}>
       {isLoading ? (
-        <ActivityIndicator color={theme.onAccent} />
+        <ActivityIndicator color={theme.link} />
       ) : (
-        <ThemedText type="smallBold" themeColor="onAccent">
+        <ThemedText type="smallBold" themeColor="link">
           {label}
         </ThemedText>
       )}
@@ -75,13 +75,14 @@ export function FormMessage({ error, info }: { error?: string | null; info?: str
 const styles = StyleSheet.create({
   input: {
     borderRadius: Spacing.three,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.three,
     fontSize: 16,
   },
   button: {
     borderRadius: Spacing.three,
+    borderWidth: 1,
     paddingVertical: Spacing.three,
     alignItems: 'center',
   },

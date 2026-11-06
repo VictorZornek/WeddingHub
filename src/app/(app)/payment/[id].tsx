@@ -133,7 +133,7 @@ export default function PaymentScreen() {
                           ? { backgroundColor: theme.accent, borderColor: theme.accent }
                           : { borderColor: isOverdue ? theme.danger : theme.border },
                       ]}>
-                      {isPaid && <SymbolView name="checkmark" size={14} tintColor={theme.onAccent} />}
+                      {isPaid && <SymbolView name="checkmark" size={14} tintColor={theme.onAccentFill} />}
                     </Pressable>
                     <View style={styles.rowText}>
                       <ThemedText type="small">

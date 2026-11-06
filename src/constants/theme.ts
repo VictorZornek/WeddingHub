@@ -7,37 +7,46 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
-// "Verde-água suave" palette.
+// "Verde-água névoa" palette: neutral backgrounds, a calm teal accent
+// and thin tinted borders instead of solid color blocks.
 export const Colors = {
   light: {
-    text: '#1D3A36',
-    textSecondary: '#5D857F',
-    background: '#F4FAF9',
+    text: '#1F2A28',
+    textSecondary: '#6E7E7A',
+    background: '#F7F8F7',
     backgroundElement: '#FFFFFF',
-    backgroundSelected: '#E2F1EE',
-    border: '#D9ECE8',
-    accent: '#76B7AC',
-    accentSoft: '#E2F1EE',
-    onAccent: '#123430',
-    onAccentSecondary: '#2E5650',
-    link: '#2F7D70',
-    danger: '#C4320A',
-    track: '#E2F1EE',
+    backgroundSelected: '#EEF5F3',
+    /** Thin card and divider lines, tinted with the accent. */
+    border: '#DCE9E5',
+    /** Stronger tinted line for highlighted cards and selected chips. */
+    accentBorder: '#A9CCC5',
+    accent: '#6FA59B',
+    accentSoft: '#EEF5F3',
+    /** Text on the highlight card (accentSoft background). */
+    onAccent: '#1F3D38',
+    onAccentSecondary: '#5F7F79',
+    /** Icons and text on a solid accent fill (checkmarks). */
+    onAccentFill: '#FFFFFF',
+    link: '#3F7F74',
+    danger: '#B9472A',
+    track: '#DCEAE6',
   },
   dark: {
-    text: '#E5F3F0',
-    textSecondary: '#97B4AF',
-    background: '#0E1716',
-    backgroundElement: '#152321',
-    backgroundSelected: '#1C2B29',
-    border: '#223432',
-    accent: '#A3D9CF',
-    accentSoft: '#1C2B29',
-    onAccent: '#10302B',
-    onAccentSecondary: '#2A4F49',
-    link: '#A3D9CF',
-    danger: '#FF8A6B',
-    track: '#223432',
+    text: '#E6ECEA',
+    textSecondary: '#8E9C99',
+    background: '#111413',
+    backgroundElement: '#171B1A',
+    backgroundSelected: '#1B2523',
+    border: '#243230',
+    accentBorder: '#3A5852',
+    accent: '#86B5AC',
+    accentSoft: '#1B2523',
+    onAccent: '#E6ECEA',
+    onAccentSecondary: '#9DB3AE',
+    onAccentFill: '#111413',
+    link: '#9CC7BE',
+    danger: '#E8876C',
+    track: '#26332F',
   },
 } as const;
 

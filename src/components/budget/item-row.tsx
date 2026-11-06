@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { chipLook } from '@/components/chip-look';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { STATUS_LABELS } from '@/features/budget/items';
@@ -30,9 +31,9 @@ export function ItemRow({ item, onPress, isLast }: Props) {
         <View
           style={[
             styles.badge,
-            { backgroundColor: isClosed ? theme.accent : theme.accentSoft },
+            chipLook(theme, isClosed).container,
           ]}>
-          <ThemedText type="small" themeColor={isClosed ? 'onAccent' : 'textSecondary'} style={styles.badgeText}>
+          <ThemedText type="small" themeColor={chipLook(theme, isClosed).textColor} style={styles.badgeText}>
             {STATUS_LABELS[item.status]}
           </ThemedText>
         </View>

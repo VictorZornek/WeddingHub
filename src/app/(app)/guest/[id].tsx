@@ -13,6 +13,7 @@ import {
 import { FieldLabel } from '@/components/field-label';
 import { FormMessage, LinkButton, PrimaryButton, TextField } from '@/components/form';
 import { Segmented } from '@/components/segmented';
+import { chipLook } from '@/components/chip-look';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { createGuest, deleteGuest, fetchGuest, fetchGuests, updateGuest } from '@/features/guests/guests';
@@ -121,12 +122,13 @@ export default function GuestScreen() {
               <View style={styles.chips}>
                 {knownGroups.map((option) => {
                   const isSelected = option === group.trim();
+                  const look = chipLook(theme, isSelected);
                   return (
                     <Pressable
                       key={option}
                       onPress={() => setGroup(isSelected ? '' : option)}
-                      style={[styles.chip, { backgroundColor: isSelected ? theme.accent : theme.accentSoft }]}>
-                      <ThemedText type="small" themeColor={isSelected ? 'onAccent' : 'textSecondary'}>
+                      style={[styles.chip, look.container]}>
+                      <ThemedText type="small" themeColor={look.textColor}>
                         {option}
                       </ThemedText>
                     </Pressable>

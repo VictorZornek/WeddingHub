@@ -92,7 +92,7 @@ export default function BudgetScreen() {
 
                 {usage !== null && project.spending_cap !== null ? (
                   <View style={styles.capBlock}>
-                    <CapBar usage={usage} onAccent />
+                    <CapBar usage={usage} />
                     <ThemedText type="small" themeColor="onAccentSecondary">
                       {usage > 1
                         ? `Acima do teto de ${formatCurrency(project.spending_cap)}`
@@ -111,10 +111,10 @@ export default function BudgetScreen() {
                   }
                   style={({ pressed }) => [
                     styles.capButton,
-                    { backgroundColor: theme.onAccentSecondary },
+                    { backgroundColor: theme.backgroundElement, borderColor: theme.accentBorder },
                     pressed && styles.pressed,
                   ]}>
-                  <ThemedText type="smallBold" style={styles.capButtonText}>
+                  <ThemedText type="smallBold" themeColor="link">
                     {project.spending_cap !== null ? 'Editar tetos' : 'Definir tetos'}
                   </ThemedText>
                 </Pressable>
@@ -166,11 +166,10 @@ const styles = StyleSheet.create({
   capButton: {
     alignSelf: 'flex-start',
     borderRadius: 999,
+    borderWidth: 1,
     paddingVertical: Spacing.one + 2,
     paddingHorizontal: Spacing.three,
   },
-  // White reads well on the dark-green pill in both light and dark mode.
-  capButtonText: { color: '#FFFFFF' },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   vendorsButton: {
     flexDirection: 'row',

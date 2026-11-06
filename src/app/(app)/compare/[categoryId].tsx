@@ -94,7 +94,7 @@ export default function CompareScreen() {
                     variant={isChosen ? 'soft' : 'plain'}
                     style={[
                       styles.quoteCard,
-                      isChosen && { borderColor: theme.accent, borderWidth: 1.5 },
+                      isChosen && { borderColor: theme.accent },
                       quote.status === 'rejected' && styles.rejected,
                     ]}>
                     <View style={styles.badges}>
@@ -193,8 +193,12 @@ export default function CompareScreen() {
 function Badge({ label, strong }: { label: string; strong?: boolean }) {
   const theme = useTheme();
   return (
-    <View style={[styles.badge, { backgroundColor: strong ? theme.accent : theme.accentSoft }]}>
-      <ThemedText type="small" themeColor={strong ? 'onAccent' : 'link'} style={styles.badgeText}>
+    <View
+      style={[
+        styles.badge,
+        { backgroundColor: theme.accentSoft, borderWidth: 1, borderColor: strong ? theme.accent : theme.accentBorder },
+      ]}>
+      <ThemedText type={strong ? 'smallBold' : 'small'} themeColor="link" style={styles.badgeText}>
         {label}
       </ThemedText>
     </View>

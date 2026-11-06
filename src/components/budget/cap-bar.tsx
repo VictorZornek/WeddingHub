@@ -2,18 +2,14 @@ import { StyleSheet, View } from 'react-native';
 
 import { useTheme } from '@/hooks/use-theme';
 
-type Props = {
-  usage: number;
-  /** Use on top of the accent card, where the accent color would disappear. */
-  onAccent?: boolean;
-};
+type Props = { usage: number };
 
 // Thin progress bar: how much of the spending cap is used. Turns red when over.
-export function CapBar({ usage, onAccent = false }: Props) {
+export function CapBar({ usage }: Props) {
   const theme = useTheme();
   const isOver = usage > 1;
-  const fill = isOver ? theme.danger : onAccent ? theme.onAccent : theme.accent;
-  const track = onAccent ? theme.onAccentSecondary : theme.track;
+  const fill = isOver ? theme.danger : theme.accent;
+  const track = theme.track;
 
   return (
     <View style={[styles.track, { backgroundColor: track }]}>
